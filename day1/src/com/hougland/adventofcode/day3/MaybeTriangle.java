@@ -1,5 +1,8 @@
 package com.hougland.adventofcode.day3;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MaybeTriangle {
     public int side1;
     public int side2;
