@@ -7,16 +7,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-// too low: 54855
-
 public class Main {
-
     public static void main(String[] args) {
         List<String> instructions = parseCsv("src/com/hougland/adventofcode/day2/day2.csv");
 
         BathroomCode bathroomCode = new BathroomCode(instructions);
-        List<Integer> code = bathroomCode.getBathroomCode();
-        System.out.println("Code for bathroom: " + code);
+        List<Integer> code1 = bathroomCode.getBathroomCode();
+        System.out.println("Code1 for bathroom: " + code1);
+
+        List<String> code2 = bathroomCode.getBathroomCode2();
+        System.out.println("Code2 for bathroom: " + code2);
     }
 
     private static List<String> parseCsv(String filename) {
