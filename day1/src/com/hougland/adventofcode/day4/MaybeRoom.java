@@ -1,8 +1,6 @@
 package com.hougland.adventofcode.day4;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class MaybeRoom {
     private String roomName;
@@ -10,9 +8,15 @@ public class MaybeRoom {
     private int sectorId;
     private String checksum;
 
+    private final String[] alphabetArray = { null, "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
+            "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
+    private final List<String> alphabetList;
+
     public MaybeRoom(
             String roomName
     ) {
+        alphabetList = Arrays.asList(alphabetArray);
+
         // roomName: aaaaa-bbb-z-y-x-123[abxyz]
         this.roomName = roomName;
 
@@ -47,6 +51,33 @@ public class MaybeRoom {
         return this.checksum;
     }
 
+    public String getDecryptedName() {
+        // iterate through each letter
+        // look up in a map what that letter's numerical value is (i -> 8)
+        // add sectorId to that letter's numerical value (8 + 343 = 351)
+        // divide that number by 26, and the modulo + the letter's numerical value is the decrypted letter's numerical value (343 % 26 = 5 + 8) -> n
+        // if new index is greater than 26, get its % again
+        // look up the new number's alphabetical value
+
+        String decryptedName = "";
+
+        for (int i = 0; i < encryptedName.length(); i++) {
+            String letter = encryptedName.substring(i, i + 1);
+            int alphabetIndex = alphabetList.indexOf(letter);
+
+            int largeShiftedAlphabetIndex = alphabetIndex + sectorId;
+            int adjustedShiftedAlphabetIndex = largeShiftedAlphabetIndex % 26;
+
+            if (adjustedShiftedAlphabetIndex > 26) {
+                adjustedShiftedAlphabetIndex = largeShiftedAlphabetIndex % 26;
+            }
+
+            decryptedName += alphabetList.get(adjustedShiftedAlphabetIndex);
+        }
+
+        return decryptedName;
+    }
+
     public boolean isRealRoom() {
         Map<Integer, String> frequencyMap = buildFrequencyMap();
 
@@ -55,7 +86,7 @@ public class MaybeRoom {
         return this.checksum.equals(realChecksum);
     }
 
-    public Map<Integer, String> buildFrequencyMap() {
+    private Map<Integer, String> buildFrequencyMap() {
         // ex: aaaaabbbzyx ---> [(5 -> a), (4 -> b), (1 -> zyx)]
         Map<Integer, String> frequencyMap = new HashMap<>();
         frequencyMap.put(8, "");
@@ -71,7 +102,6 @@ public class MaybeRoom {
             String letter = encryptedName.substring(i, i + 1);
             int numOccurances = encryptedName.length() - encryptedName.replace(letter, "").length();
             if (numOccurances > 0) {
-                System.out.println("frequencyMap.get(numOccurances): " + frequencyMap.get(numOccurances) + " numOccurances: " + numOccurances);
                 if (!frequencyMap.get(numOccurances).contains(letter)) {
                     frequencyMap.put(numOccurances, (frequencyMap.get(numOccurances) + letter));
                 }
@@ -81,7 +111,7 @@ public class MaybeRoom {
         return frequencyMap;
     }
 
-    public String buildRealChecksum(
+    private String buildRealChecksum(
             Map<Integer, String> frequencyMap
     ) {
         String realChecksum = "";

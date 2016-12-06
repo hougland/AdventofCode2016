@@ -1,9 +1,6 @@
 package com.hougland.adventofcode.day4;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +25,24 @@ public class Main {
         }
 
         System.out.println("Sum of sector Ids: " + sectorIdsSum);
+
+        // Part 2
+        // Iterate through realRooms, decrypt the shift cipher, and write result to new file
+        // Manually look through real-names.txt for north pole objects
+        PrintWriter writer;
+        try {
+            writer = new PrintWriter("real-names.txt", "UTF-8");
+
+            for (MaybeRoom room : realRooms) {
+                String realName = room.getDecryptedName();
+                writer.println(String.format("Real: %s SectorId: %s", realName, room.getSectorId()));
+            }
+
+            writer.close();
+
+        } catch (IOException e) {
+            System.out.print(e);
+        }
     }
 
     private static List<MaybeRoom> parseCsv(String filename) {
