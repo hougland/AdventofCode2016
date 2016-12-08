@@ -1,9 +1,10 @@
 package com.hougland.adventofcode.day7;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Array;
+import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class IPAddress {
     String fullIPAddress;
@@ -54,6 +55,43 @@ public class IPAddress {
         }
 
         return false;
+    }
+
+    public boolean supportsSSL() {
+        List<String> babs = new ArrayList<>();
+        for (String sequence: hypernetSequences) {
+            for (int i = 0; i < sequence.length() - 2; i++) {
+                final String sequenceSubstring = sequence.substring(i, i + 3);
+                if (isBABorABA(sequenceSubstring)) {
+                    babs.add(sequenceSubstring);
+                }
+            }
+        }
+
+        List<String> babsToAbas = babs
+                .stream()
+                .map(IPAddress::BABtoABA)
+                .collect(Collectors.toList());
+
+        List<String> abas = new ArrayList<>();
+        for (String sequence: otherSequences) {
+            for (int i = 0; i < sequence.length() - 2; i++) {
+                final String sequenceSubstring = sequence.substring(i, i + 3);
+                if (isBABorABA(sequenceSubstring)) {
+                    abas.add(sequenceSubstring);
+                }
+            }
+        }
+
+        return !Collections.disjoint(babsToAbas, abas);
+    }
+
+    private static boolean isBABorABA(String sequence) {
+        return sequence.substring(0, 1).equals(sequence.substring(2, 3)) && !sequence.substring(0, 1).equals(sequence.substring(1, 2));
+    }
+
+    private static String BABtoABA(String aba) {
+        return aba.substring(1, 2) + aba.substring(0, 1) + aba.substring(1, 2);
     }
 
     private Map<String, List<String>> buildHypernetSequences() {

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Main {
-    
+
     public static void main(String[] args) {
         List<IPAddress> ipAddresses = parseCSV("src/com/hougland/adventofcode/day7/day7.csv");
 
@@ -19,8 +19,14 @@ public class Main {
                 .collect(Collectors.toList());
 
         System.out.println("Number of real IP addresses: " + realIPAddresses.size());
-    }
 
+        List<IPAddress> supportsSSL = ipAddresses
+                .stream()
+                .filter(IPAddress::supportsSSL)
+                .collect(Collectors.toList());
+
+        System.out.println("Number of IP addresses that support SSL: " + supportsSSL.size());
+    }
 
     public static List<IPAddress> parseCSV(String filepath) {
         List<IPAddress> ipAddresses = new ArrayList<>();
