@@ -15,6 +15,19 @@ public class Main {
         SmallScreen smallScreen = followInstructions(instructions);
 
         System.out.println("Number of pixels turned on: " + smallScreen.numPixelsTurnedOn());
+
+        for (int i = 0; i < 50; i++) {
+            if (i % 5 == 0) {
+                System.out.println("Letter starting at " + i + ":");
+                System.out.println(String.format("%d | %d | %d | %d | %d", smallScreen.screen[0][i], smallScreen.screen[0][i + 1], smallScreen.screen[0][i + 2], smallScreen.screen[0][i + 3], smallScreen.screen[0][i + 4]));
+                System.out.println(String.format("%d | %d | %d | %d | %d",smallScreen.screen[1][i], smallScreen.screen[1][i + 1], smallScreen.screen[1][i + 2], smallScreen.screen[1][i + 3], smallScreen.screen[1][i + 4]));
+                System.out.println(String.format("%d | %d | %d | %d | %d", smallScreen.screen[2][i], smallScreen.screen[2][i + 1], smallScreen.screen[2][i + 2], smallScreen.screen[2][i + 3], smallScreen.screen[2][i + 4]));
+                System.out.println(String.format("%d | %d | %d | %d | %d", smallScreen.screen[3][i], smallScreen.screen[3][i + 1], smallScreen.screen[3][i + 2], smallScreen.screen[3][i + 3], smallScreen.screen[3][i + 4]));
+                System.out.println(String.format("%d | %d | %d | %d | %d", smallScreen.screen[4][i], smallScreen.screen[4][i + 1], smallScreen.screen[4][i + 2], smallScreen.screen[4][i + 3], smallScreen.screen[4][i + 4]));
+                System.out.println(String.format("%d | %d | %d | %d | %d", smallScreen.screen[5][i], smallScreen.screen[5][i + 1], smallScreen.screen[5][i + 2], smallScreen.screen[5][i + 3], smallScreen.screen[5][i + 4]));
+            }
+        }
+
     }
 
     public static SmallScreen followInstructions(List<String> instructions) {
@@ -22,7 +35,6 @@ public class Main {
 //        SmallScreen smallScreen = new SmallScreen(3, 7); // test
 
         for (String instruction : instructions) {
-            System.out.println(instruction);
             if ("rect".equals(instruction.substring(0, 4))) {
                 String xString = "";
                 int xEndingIndex = 0;
@@ -66,12 +78,7 @@ public class Main {
 
                 smallScreen.rotateColumn(column, numPixels);
             }
-
-            System.out.println(String.format("%d | %d | %d", smallScreen.screen[0][0], smallScreen.screen[0][1], smallScreen.screen[0][2]));
-            System.out.println(String.format("%d | %d | %d",smallScreen.screen[1][0], smallScreen.screen[1][1], smallScreen.screen[1][2]));
-            System.out.println(String.format("%d | %d | %d", smallScreen.screen[2][0], smallScreen.screen[2][1], smallScreen.screen[2][2]));
         }
-
 
         return smallScreen;
     }
