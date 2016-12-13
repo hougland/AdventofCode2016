@@ -40,7 +40,7 @@ public class Main {
             }
         }
 
-        // put this in a while loop
+        // iterate over instructions
         while (newInstructions.size() > 0) {
             final Bot activeBot = bots.stream().filter(Bot::hasTwoCards).findFirst().get();
 
@@ -61,7 +61,15 @@ public class Main {
     public static void followInstructions(String[] instructions, Bot bot, Set<Bot> bots, Set<Integer> botNumbers) {
         // take care of low number
         if ("output".equals(instructions[5])) {
+            if ("0".equals(instructions[6])) {
+                System.out.println("Output 0 value: " + bot.low);
+            } else if ("1".equals(instructions[6])) {
+                System.out.println("Output 1 value: " + bot.low);
+            } else if ("2".equals(instructions[6])) {
+                System.out.println("Output 2 value: " + bot.low);
+            }
             bot.giveLow();
+
         } else {
             int lowToBotNum = Integer.parseInt(instructions[6]);
             Optional<Bot> lowToBotOptional = bots.stream().filter(b -> b.getBotNumber() == lowToBotNum).findFirst();
@@ -80,7 +88,15 @@ public class Main {
 
         // take care of high number
         if ("output".equals(instructions[10])) {
+            if ("0".equals(instructions[11])) {
+                System.out.println("Output 0 value: " + bot.high);
+            } else if ("1".equals(instructions[6])) {
+                System.out.println("Output 1 value: " + bot.high);
+            } else if ("2".equals(instructions[6])) {
+                System.out.println("Output 2 value: " + bot.high);
+            }
             bot.giveHigh();
+
         } else {
             int highToBotNum = Integer.parseInt(instructions[11]);
             Optional<Bot> highToBotOptional = bots.stream().filter(b -> b.getBotNumber() == highToBotNum).findFirst();
@@ -94,7 +110,11 @@ public class Main {
                 bots.add(highToBot);
             }
 
-            highToBot.addNumber(bot.high);
+            if (bot.high > 0) {
+                highToBot.addNumber(bot.high);
+            } else {
+                highToBot.addNumber(bot.only);
+            }
 
             bot.giveAll();
         }
