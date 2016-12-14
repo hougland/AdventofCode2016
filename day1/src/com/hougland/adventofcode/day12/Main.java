@@ -27,7 +27,7 @@ public class Main {
         registerToIndex.put("c", 2);
         registerToIndex.put("d", 3);
 
-        Integer[] registers = {0, 0, 0, 0};
+        Integer[] registers = {0, 0, 1, 0};
 
         int instructionsIndex = 0;
 
