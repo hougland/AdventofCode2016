@@ -3,57 +3,93 @@ package com.hougland.adventofcode.day14;
 import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class Main {
+
+    // too high: 30495
+    // too low: 17925
 
     public static void main(String[] args) {
         final String salt = "ahsbgdzn";
 //        final String salt = "abc";
         int index = 0;
-        final MessageDigest m;
         int numKeys = 0;
         Set<String> keys = new HashSet<>();
-
-        try {
-            m = MessageDigest.getInstance("MD5");
-        } catch (final NoSuchAlgorithmException e) {
-            throw new IllegalStateException(e);
-        }
-
-        m.reset();
+        List<String> hashes = generateHexes(new ArrayList<>(), salt, 1000);
 
         while (numKeys < 64) {
-            byte[] toHash = (salt + String.valueOf(index)).getBytes();
-            String hex = (new HexBinaryAdapter()).marshal(m.digest(toHash));
+            String currentHex = hashes.get(index);
 
-            Optional<String> threesies = containsThreesies(hex);
+            Optional<String> threesies = containsThreesies(currentHex);
 
+            // if it contains 3sies, find if there's 5sies in the next 1000 hexes
             if (threesies.isPresent()) {
-                int index2 = index + 1;
+                // make sure there are enough generated hashes to iterate through
+                if (hashes.size() < index + 1000) {
+                    generateHexes(hashes, salt, 1000);
+                }
+
                 boolean foundFivesies = false;
-                for (int i = 0; i < 1000; i++) {
-                    byte[] toHash2 = (salt + String.valueOf(index2)).getBytes();
-                    String hex2 = (new HexBinaryAdapter()).marshal(m.digest(toHash2));
+                // **** check instructions - can the current hex contain 5sies or does it have to be one of the following 1000?
+                // if code below is correct, answer could be 19694
+                for (int i = index + 1; i < index + 1000; i++) {
+                    String currentHex2 = hashes.get(i);
 
-                    if (!keys.contains(hex)) {
-
-                        if (!foundFivesies && containsFivesies(hex2, threesies.get())) {
-                            System.out.println(String.format("Found a key at index [%d], index2 [%d], hex: [%s]", index, index2, hex));
-                            keys.add(hex);
-                            numKeys++;
-                            foundFivesies = true;
-                        }
+                    // if the current hex isn't already in the keys
+                    // and we haven't already found fivesies
+                    // and the current hex2 has fivsies
+                    // then add it to the keys
+                    if (!keys.contains(currentHex) && !foundFivesies && containsFivesies(currentHex2, threesies.get())) {
+                        System.out.println(String.format("Found a key at index [%d], hex: [%s]", index, currentHex));
+                        foundFivesies = true;
+                        keys.add(currentHex);
+                        numKeys++;
                     }
-                    index2++;
                 }
             }
             index++;
         }
 
         System.out.println("numKeys: " + numKeys);
+    }
+
+    public static List<String> generateHexes(final List<String> hexes, String salt, int numHexes) {
+        final MessageDigest m;
+        try {
+            m = MessageDigest.getInstance("MD5");
+        } catch (final NoSuchAlgorithmException e) {
+            throw new IllegalStateException(e);
+        }
+        m.reset();
+
+        for (int i = 0; i < numHexes; i++) {
+            int currentIndex = hexes.size();
+            byte[] toHash = (salt + String.valueOf(currentIndex)).getBytes();
+            String preStretchedHex = (new HexBinaryAdapter()).marshal(m.digest(toHash)).toLowerCase();
+            String stretchedHex = stretchHex(preStretchedHex);
+
+            hexes.add(stretchedHex);
+        }
+
+        return hexes;
+    }
+
+    public static String stretchHex(final String hex) {
+        final MessageDigest m;
+        try {
+            m = MessageDigest.getInstance("MD5");
+        } catch (final NoSuchAlgorithmException e) {
+            throw new IllegalStateException(e);
+        }
+        m.reset();
+
+        String stretchedHex = null;
+        for (int i = 0; i < 2016; i++) {
+            stretchedHex = (new HexBinaryAdapter()).marshal(m.digest(hex.getBytes())).toLowerCase();
+        }
+
+        return stretchedHex;
     }
 
     public static Optional<String> containsThreesies(final String hex) {
@@ -67,6 +103,7 @@ public class Main {
             }
 
             if (count == 2) {
+//                System.out.println(String.format("Found threesies char: [%s] in hex: [%s]", currentChar, hex));
                 return Optional.of(currentChar);
             }
         }
