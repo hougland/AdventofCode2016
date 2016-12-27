@@ -8,6 +8,7 @@ import java.util.*;
 public class Main {
 
     // too high: 30495
+    // too low: 19694
     // too low: 17925
 
     public static void main(String[] args) {
@@ -31,8 +32,6 @@ public class Main {
                 }
 
                 boolean foundFivesies = false;
-                // **** check instructions - can the current hex contain 5sies or does it have to be one of the following 1000?
-                // if code below is correct, answer could be 19694
                 for (int i = index + 1; i < index + 1000; i++) {
                     String currentHex2 = hashes.get(i);
 
@@ -84,9 +83,10 @@ public class Main {
         }
         m.reset();
 
-        String stretchedHex = null;
+        String stretchedHex = hex;
         for (int i = 0; i < 2016; i++) {
-            stretchedHex = (new HexBinaryAdapter()).marshal(m.digest(hex.getBytes())).toLowerCase();
+            stretchedHex = (new HexBinaryAdapter()).marshal(m.digest(stretchedHex.getBytes())).toLowerCase();
+            m.reset();
         }
 
         return stretchedHex;
