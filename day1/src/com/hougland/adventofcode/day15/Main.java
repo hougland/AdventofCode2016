@@ -13,7 +13,7 @@ public class Main {
         List<Disk> disks = parseCSV("src/com/hougland/adventofcode/day15/day15.csv");
 
         int capsulePosition = -1;
-        int timeDelay = 170068; // 56695; // not less than 132277
+        int timeDelay = 170068;
 
         while (capsulePosition < disks.size() - 1) {
             if (capsulePosition == -1) {
@@ -30,7 +30,7 @@ public class Main {
             if (!canPass) {
                 // reset and increment timeDelay
                 disks = resetDisks(disks);
-                timeDelay += 13;
+                timeDelay += 4199; // got this magic number by finding the difference between capsules passing through 3rd disk
                 capsulePosition = -1;
             } else {
                 if (capsulePosition > 1) {
