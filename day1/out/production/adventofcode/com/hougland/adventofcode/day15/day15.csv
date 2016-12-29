@@ -1,0 +1,6 @@
+Disc #1 has 13 positions; at time=0, it is at position 10. // first time will be at time=2 (10 + 2 + 1), then time=15 (10 + 15 + 1), then time= (13 + 13 + 10 + 2 + 1)
+Disc #2 has 17 positions; at time=0, it is at position 15.
+Disc #3 has 19 positions; at time=0, it is at position 17.
+Disc #4 has 7 positions; at time=0, it is at position 1.
+Disc #5 has 5 positions; at time=0, it is at position 0. // Can pass: capsule position [4], time delay [56695]
+Disc #6 has 3 positions; at time=0, it is at position 1.
